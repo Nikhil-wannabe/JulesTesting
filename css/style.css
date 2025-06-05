@@ -1,0 +1,582 @@
+body {
+    margin: 0;
+    overflow-x: hidden; /* Hide horizontal scrollbar initially, GSAP will handle scroll */
+    font-family: sans-serif; /* Basic font for now */
+}
+
+#main-container {
+    width: 400%; /* Or number of sections * 100% */
+    height: 100vh;
+    display: flex;
+    flex-wrap: nowrap; /* Ensure sections stay in a single line */
+}
+
+.panel {
+    width: 100vw;
+    height: 100vh;
+    /* display: flex; default, but hero section will override */
+    /* justify-content: center; */
+    /* align-items: center; */
+    font-size: 2em;
+    border-left: 1px solid #ccc; /* For visual separation during dev */
+}
+
+/* .hero-section { background-color: lightblue; } // Will be replaced by gradient */
+/* .about-section { background-color: lightcoral; display: flex; justify-content: center; align-items: center; } // Will be updated */
+/* .projects-section { background-color: lightgreen; display: flex; justify-content: center; align-items: center; } // Will be updated */
+/* .contact-section { background-color: lightgoldenrodyellow; display: flex; justify-content: center; align-items: center; } // Will be updated */
+
+/* Updated hero-section styles */
+.hero-section {
+    position: relative; /* Needed for absolute positioning of children */
+    overflow: hidden; /* Hide parts of layers that move outside */
+    display: flex; /* Use flex to center hero-content */
+    justify-content: center;
+    align-items: center;
+    text-align: center; /* Center text within hero-content */
+    /* Placeholder for abstract AI motif background */
+    background: linear-gradient(45deg, #1a237e 0%, #3f51b5 50%, #2196f3 100%);
+}
+
+.parallax-bg, .parallax-mid, .parallax-fg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.5em; /* Smaller than section title */
+    padding: 20px;
+    border-radius: 10px;
+    color: white; /* Ensure text is visible on new parallax backgrounds */
+}
+
+/* Adjusted parallax layer styling to be less obtrusive with new background */
+.parallax-bg {
+    background-color: rgba(255, 255, 255, 0.1); /* More subtle */
+    z-index: 1;
+    width: 110%;
+    height: 110%;
+    text-align: center;
+}
+
+.parallax-mid {
+    background-color: rgba(255, 255, 255, 0.1); /* More subtle */
+    z-index: 2;
+    width: 120%;
+    height: 120%;
+    text-align: center;
+    top: 55%; /* Slightly offset */
+}
+
+.parallax-fg {
+    background-color: rgba(255, 255, 255, 0.1); /* More subtle */
+    z-index: 3;
+    width: 80%;
+    height: 80%;
+    text-align: center;
+    top: 45%; /* Slightly offset */
+}
+
+/* Remove old .hero-section h1 styling, new content structure */
+/* .hero-section h1 { ... } */
+
+.hero-content {
+    position: relative;
+    z-index: 10; /* Ensure content is above parallax layers and 3D canvas for now */
+    color: white;
+    padding: 20px;
+}
+
+.intro-message {
+    font-size: 2.5em; /* Adjust as needed */
+    font-weight: bold;
+    line-height: 1.4;
+}
+
+.intro-message span {
+    display: block; /* Each span on a new line */
+    opacity: 0; /* Initial state for reveal animation */
+    transform: translateY(30px); /* Initial state for reveal animation */
+}
+
+#hero-3d-canvas {
+  pointer-events: none; /* Initially, let clicks pass through to content if any overlaps */
+}
+
+/* About Me Section Styles */
+.about-section {
+    background-color: #1f2a40; /* A slightly different dark shade */
+    color: #e0e0e0;
+    display: flex; /* Keep flex for vertical centering of wrapper */
+    justify-content: center;
+    align-items: center;
+    overflow: hidden; /* Prevent content overflow during animations */
+    position: relative; /* For positioning the decoration */
+}
+
+.about-parallax-decoration {
+    position: absolute;
+    top: 10%;
+    left: -20%; /* Start off-screen */
+    width: 50vw; /* Large element */
+    height: 80vh;
+    background: linear-gradient(45deg, rgba(79, 195, 247, 0.05), rgba(79, 195, 247, 0.2));
+    border-radius: 50%; /* Make it a soft oval/circle */
+    opacity: 0.5;
+    z-index: 0; /* Behind content */
+    filter: blur(50px); /* Soften it significantly */
+}
+
+.about-content-wrapper {
+    padding: 40px;
+    max-width: 900px;
+    width: 90%;
+    text-align: left;
+}
+
+.about-content-wrapper h2 {
+    font-size: 2.5em;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 40px;
+    opacity: 0; /* For animation */
+    transform: translateY(-20px); /* For animation */
+}
+
+.about-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.about-block {
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 25px;
+    border-radius: 8px;
+    opacity: 0; /* Initial state for reveal animation */
+    transform: translateX(-30px); /* Initial state for reveal animation */
+}
+
+.about-block h3 {
+    font-size: 1.8em;
+    color: #4fc3f7; /* Light blue accent */
+    margin-top: 0;
+    margin-bottom: 15px;
+}
+
+.about-block h4 {
+    font-size: 1.4em;
+    color: #ffffff; /* Light blue accent */
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.about-block p, .about-block li {
+    font-size: 1em;
+    line-height: 1.6;
+    color: #c0c0c0;
+}
+
+.about-block ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.about-block ul li {
+    padding-left: 20px;
+    position: relative;
+    margin-bottom: 8px;
+}
+
+.about-block ul li::before {
+    content: '»'; /* Custom bullet */
+    position: absolute;
+    left: 0;
+    color: #4fc3f7; /* Accent color for bullet */
+}
+
+.about-block#about-skills p {
+    word-spacing: 5px; /* Make skills list more readable */
+}
+
+/* Magna Opera (Projects) Section Styles */
+.projects-section {
+    background-color: #121212;
+    color: #e0e0e0;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.projects-content-wrapper {
+    padding: 40px;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+}
+
+.projects-content-wrapper h2 {
+    font-size: 2.5em;
+    color: #ffffff;
+    margin-bottom: 20px;
+    opacity: 0; /* For animation */
+    transform: translateY(-20px); /* For animation */
+}
+
+.projects-container {
+    display: flex;
+    width: 300%; /* 100% for each of the 3 projects */
+    height: calc(100% - 70px); /* Adjust based on title height and padding */
+    position: relative;
+}
+
+.project-module {
+    width: calc(100% / 3);
+    height: 100%;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start; /* Align content to top */
+    text-align: left;
+    border-right: 1px solid #333;
+    box-sizing: border-box; /* Include padding in width/height calculation */
+    opacity: 0;
+    transform: translateY(30px) scale(0.98);
+}
+.project-module:last-child {
+    border-right: none;
+}
+
+.project-info {
+    margin-bottom: 20px;
+    width: 90%;
+    max-width: 600px;
+}
+
+.project-info h3 {
+    font-size: 2em;
+    color: #64b5f6;
+    margin-bottom: 10px;
+}
+
+.project-concept {
+    font-style: italic;
+    margin-bottom: 15px;
+    color: #b0bec5;
+    font-size: 1.1em; /* Slightly larger for better readability */
+}
+
+.project-tech-stack {
+    font-size: 0.9em;
+    color: #90a4ae;
+    margin-bottom: 15px;
+}
+.project-tech-stack strong { color: #b0bec5;}
+
+.project-links a {
+    display: inline-block;
+    margin-right: 10px;
+    margin-bottom: 5px; /* Handle wrapping */
+    padding: 8px 15px;
+    background-color: #64b5f6;
+    color: #121212;
+    text-decoration: none;
+    border-radius: 4px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+.project-links a:hover {
+    background-color: #42a5f5;
+}
+
+.project-visuals {
+    width: 90%;
+    max-width: 600px;
+    background-color: rgba(0,0,0,0.2);
+    padding: 20px;
+    border-radius: 8px;
+    min-height: 200px;
+    display: flex;
+    flex-direction: column; /* Stack visuals if multiple */
+    justify-content: center;
+    align-items: center;
+    color: #78909c;
+    margin-top: auto; /* Push visuals to bottom if info is short */
+    box-sizing: border-box;
+    position: relative; /* Ensure this is set for absolute positioning of layers */
+    overflow: hidden; /* Hide parts of layers that move outside */
+}
+
+.project-visuals .parallax-layer {
+    position: absolute;
+    border-radius: 10px;
+    background-color: rgba(255, 255, 255, 0.05); /* Default subtle look */
+    pointer-events: none; /* They are decorative */
+}
+
+/* VIBEZSUME Parallax Layers */
+#vibezsume .project-visuals .p-layer-1 {
+    width: 80px; height: 100px;
+    background-color: rgba(79, 195, 247, 0.2); /* Light blue */
+    top: 10%; left: 5%;
+    border-radius: 5px;
+    transform: rotate(-15deg);
+}
+#vibezsume .project-visuals .p-layer-2 {
+    width: 120px; height: 50px;
+    background-color: rgba(100, 221, 23, 0.2); /* Light green */
+    bottom: 15%; right: 10%;
+    border-radius: 3px;
+    transform: rotate(10deg);
+}
+#vibezsume .project-visuals .p-layer-3 {
+    width: 60px; height: 60px;
+    background-color: rgba(255, 170, 0, 0.15); /* Orange */
+    top: 20%; right: 15%;
+    border-radius: 50%; /* Circle */
+}
+
+/* SKlearn Playground Parallax Layers */
+#sklearn-playground .project-visuals .p-layer-1 {
+    width: 100px; height: 100px;
+    border: 2px dashed rgba(255, 82, 82, 0.3); /* Red dashed */
+    top: 15%; left: 10%;
+    transform: rotate(20deg);
+}
+#sklearn-playground .project-visuals .p-layer-2 {
+    width: 70px; height: 70px;
+    background-color: rgba(170, 0, 255, 0.2); /* Purple */
+    bottom: 10%; right: 5%;
+    clip-path: polygon(50% 0%, 0% 100%, 100% 100%); /* Triangle */
+}
+#sklearn-playground .project-visuals .p-layer-3 {
+    width: 150px; height: 40px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background-image: repeating-linear-gradient(
+        45deg,
+        rgba(255,255,255,0.02),
+        rgba(255,255,255,0.02) 5px,
+        transparent 5px,
+        transparent 10px
+    );
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%) rotate(-5deg); /* Centered and slightly rotated */
+}
+
+/* Ensure main visual content is above these layers */
+.vibezsume-visual, .sklearn-visual {
+    position: relative;
+    z-index: 1;
+}
+
+.simulated-terminal {
+    background-color: #0a0a0a;
+    color: #00ff00;
+    padding: 15px;
+    border-radius: 5px;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.9em;
+    white-space: pre-wrap;
+    word-break: break-all;
+    max-height: 200px;
+    overflow-y: auto;
+    border: 1px solid #333;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+/* MITRA OS Specific Visuals */
+.mitra-os-visual {
+    position: relative; /* To allow absolute positioning of the canvas */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.simulated-terminal {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    max-width: 500px;
+}
+
+#mitra-os-3d-canvas {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100%;
+    height: 100%;
+    min-height: 250px;
+    z-index: 0; /* Behind terminal text, or 2 if elements should be in front */
+    pointer-events: none;
+    border: none;
+    background: transparent;
+}
+
+.mitra-3d-ui-placeholder { /* This class is on the #mitra-os-3d-canvas initially */
+    font-size: 0.8em; /* Will be hidden once canvas is drawn into */
+    color: #546e7a;
+    text-align: center;
+    /* margin-top: 10px; // Not needed due to absolute positioning */
+    /* border: 1px dashed #546e7a; // Handled by #mitra-os-3d-canvas styling */
+    padding: 10px;
+    /* width: 100%; // Handled by #mitra-os-3d-canvas styling */
+    box-sizing: border-box;
+    display: flex; /* To center placeholder text if canvas is empty */
+    justify-content: center;
+    align-items: center;
+}
+#mitra-os-3d-canvas:not(:empty) + .mitra-3d-ui-placeholder-text {
+    display: none; /* Hide placeholder text if canvas has content, though JS will clear it*/
+}
+
+
+.vibezsume-visual p, .sklearn-visual p {
+    margin: 10px 0;
+    font-style: italic;
+}
+
+/* Contact Section Styles */
+.contact-section {
+    background-color: #1a1a2e; /* Dark purple/blue shade */
+    color: #e0e0e0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.contact-content-wrapper {
+    padding: 40px;
+    max-width: 800px;
+    width: 90%;
+    text-align: center;
+    opacity: 0; /* For section reveal */
+    transform: translateY(50px); /* For section reveal */
+}
+
+.contact-content-wrapper h2 {
+    font-size: 2.5em;
+    color: #ffffff;
+    margin-bottom: 40px;
+}
+
+.contact-details {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    gap: 20px; /* Spacing between icons */
+    flex-wrap: wrap; /* Allow icons to wrap on smaller screens */
+}
+
+.social-icon {
+    display: inline-block;
+    padding: 10px 15px; /* Adjust for icon size */
+    border: 1px solid #4fc3f7;
+    color: #4fc3f7; /* Light blue accent */
+    text-decoration: none;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    min-width: 100px; /* Ensure some width for text if icons are missing */
+    text-align: center;
+}
+
+.social-icon .icon-text { /* Simple text placeholder */
+    font-size: 0.9em;
+}
+
+.social-icon:hover {
+    background-color: #4fc3f7;
+    color: #1a1a2e;
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+}
+
+.contact-form-container {
+    width: 100%;
+    max-width: 500px; /* Limit form width */
+    background-color: rgba(255, 255, 255, 0.05);
+    padding: 30px;
+    border-radius: 8px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #b0bec5;
+}
+
+.form-group input[type="text"],
+.form-group input[type="email"],
+.form-group textarea {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #37474f; /* Darker border */
+    border-radius: 4px;
+    background-color: #263238; /* Dark input background */
+    color: #eceff1;
+    font-size: 1em;
+    box-sizing: border-box;
+}
+.form-group input[type="text"]:focus,
+.form-group input[type="email"]:focus,
+.form-group textarea:focus {
+    border-color: #4fc3f7;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(79, 195, 247, 0.3);
+}
+
+
+.submit-btn {
+    display: inline-block;
+    padding: 12px 25px;
+    background-color: #64b5f6;
+    color: #121212;
+    border: none;
+    border-radius: 4px;
+    font-size: 1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit-btn:hover {
+    background-color: #42a5f5;
+}
+
+.form-feedback {
+    margin-top: 15px;
+    padding: 10px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    display: none; /* Hidden by default */
+}
+
+.form-feedback.success {
+    background-color: #2e7d32; /* Green */
+    color: white;
+    display: block;
+}
+
+.form-feedback.error {
+    background-color: #c62828; /* Red */
+    color: white;
+    display: block;
+}
